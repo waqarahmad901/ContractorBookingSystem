@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ContratorBookingSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Building">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ArabicName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="SpaceUnits" Relationship="Self.FK_SpaceUnit_Building" FromRole="Building" ToRole="SpaceUnit" />
+  </EntityType>
+  <EntityType Name="Contract">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Guid" />
+    <Property Name="StartDate" Type="DateTime" Precision="0" />
+    <Property Name="EndDate" Type="DateTime" Precision="0" />
+    <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="NoOfInstallments" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <NavigationProperty Name="ContractPayments" Relationship="Self.FK_ContractPayment_Contract" FromRole="Contract" ToRole="ContractPayment" />
+    <Property Name="SpaceUnitCombinedName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="cr_by" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="cr_at" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="ContractPayment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContractId" Type="Int32" Nullable="false" />
+    <Property Name="PaymentNo" Type="Int32" Nullable="false" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="DueDate" Type="DateTime" Precision="0" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Contract" Relationship="Self.FK_ContractPayment_Contract" FromRole="ContractPayment" ToRole="Contract" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ContactNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ContactPerson" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AnyDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CustomerSpaceUnits" Relationship="Self.FK_CustomerSpaceUnit_Customer" FromRole="Customer" ToRole="CustomerSpaceUnit" />
+  </EntityType>
+  <EntityType Name="CustomerSpaceUnit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="SpaceUnitId" Type="Int32" Nullable="false" />
+    <Property Name="GroupId" Type="Guid" />
+    <NavigationProperty Name="Contracts" Relationship="Self.FK_Contract_CustomerSpaceUnit" FromRole="CustomerSpaceUnit" ToRole="Contract" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK_CustomerSpaceUnit_Customer" FromRole="CustomerSpaceUnit" ToRole="Customer" />
+    <NavigationProperty Name="SpaceUnit" Relationship="Self.FK_CustomerSpaceUnit_SpaceUnit" FromRole="CustomerSpaceUnit" ToRole="SpaceUnit" />
+  </EntityType>
+  <EntityType Name="SpaceUnit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BuildingId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsAvailable" Type="Boolean" />
+    <NavigationProperty Name="Building" Relationship="Self.FK_SpaceUnit_Building" FromRole="SpaceUnit" ToRole="Building" />
+    <NavigationProperty Name="CustomerSpaceUnits" Relationship="Self.FK_CustomerSpaceUnit_SpaceUnit" FromRole="SpaceUnit" ToRole="CustomerSpaceUnit" />
+  </EntityType>
+  <Association Name="FK_SpaceUnit_Building">
+    <End Role="Building" Type="Self.Building" Multiplicity="1" />
+    <End Role="SpaceUnit" Type="Self.SpaceUnit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Building">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SpaceUnit">
+        <PropertyRef Name="BuildingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Contract_CustomerSpaceUnit">
+    <End Role="CustomerSpaceUnit" Type="Self.CustomerSpaceUnit" Multiplicity="1" />
+    <End Role="Contract" Type="Self.Contract" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerSpaceUnit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Contract">
+        <PropertyRef Name="CustomerSpaceUnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ContractPayment_Contract">
+    <End Role="Contract" Type="Self.Contract" Multiplicity="1" />
+    <End Role="ContractPayment" Type="Self.ContractPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contract">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ContractPayment">
+        <PropertyRef Name="ContractId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerSpaceUnit_Customer">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+    <End Role="CustomerSpaceUnit" Type="Self.CustomerSpaceUnit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSpaceUnit">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerSpaceUnit_SpaceUnit">
+    <End Role="SpaceUnit" Type="Self.SpaceUnit" Multiplicity="1" />
+    <End Role="CustomerSpaceUnit" Type="Self.CustomerSpaceUnit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SpaceUnit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSpaceUnit">
+        <PropertyRef Name="SpaceUnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ContratorBookingSystemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Buildings" EntityType="Self.Building" />
+    <EntitySet Name="Contracts" EntityType="Self.Contract" />
+    <EntitySet Name="ContractPayments" EntityType="Self.ContractPayment" />
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="CustomerSpaceUnits" EntityType="Self.CustomerSpaceUnit" />
+    <EntitySet Name="SpaceUnits" EntityType="Self.SpaceUnit" />
+    <AssociationSet Name="FK_SpaceUnit_Building" Association="Self.FK_SpaceUnit_Building">
+      <End Role="Building" EntitySet="Buildings" />
+      <End Role="SpaceUnit" EntitySet="SpaceUnits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Contract_CustomerSpaceUnit" Association="Self.FK_Contract_CustomerSpaceUnit">
+      <End Role="CustomerSpaceUnit" EntitySet="CustomerSpaceUnits" />
+      <End Role="Contract" EntitySet="Contracts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ContractPayment_Contract" Association="Self.FK_ContractPayment_Contract">
+      <End Role="Contract" EntitySet="Contracts" />
+      <End Role="ContractPayment" EntitySet="ContractPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerSpaceUnit_Customer" Association="Self.FK_CustomerSpaceUnit_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="CustomerSpaceUnit" EntitySet="CustomerSpaceUnits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerSpaceUnit_SpaceUnit" Association="Self.FK_CustomerSpaceUnit_SpaceUnit">
+      <End Role="SpaceUnit" EntitySet="SpaceUnits" />
+      <End Role="CustomerSpaceUnit" EntitySet="CustomerSpaceUnits" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,9 @@
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\DataLayer.dll.config
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\DataLayer.dll
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\DataLayer.pdb
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\EntityFramework.dll
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\EntityFramework.SqlServer.dll
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\EntityFramework.xml
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\bin\Release\EntityFramework.SqlServer.xml
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\obj\Release\DataLayer.dll
+F:\Clients\Atif\ContractorBookingSystem\ContratorBookingSystem\DataLayer\obj\Release\DataLayer.pdb
